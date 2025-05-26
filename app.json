@@ -1,0 +1,24 @@
+{
+  "name": "نظام المحاسبة",
+  "description": "نظام المحاسبة وإدارة المخزون",
+  "repository": "",
+  "keywords": ["django", "accounting", "erp", "arabic"],
+  "env": {
+    "SECRET_KEY": {
+      "description": "مفتاح التشفير السري للتطبيق",
+      "generator": "secret"
+    },
+    "DEBUG": {
+      "description": "وضع التصحيح",
+      "value": "False"
+    }
+  },
+  "addons": [
+    "heroku-postgresql:hobby-dev"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}

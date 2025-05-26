@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}لوحة التحكم - نظام المحاسبة{% endblock %}
+
+{% block page_title %}لوحة تحكم المحاسبة{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/dashboard-enhanced.css">
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2 class="section-title">نظرة عامة على لوحة التحكم</h2>
+        <p class="section-description">مرحباً بك في لوحة تحكم قسم المحاسبة</p>
+    </div>
+</div>
+
+<!-- Stat Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="stat-title">إجمالي المنتجات</h6>
+                        <h3 class="stat-value">{{ total_products }}</h3>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="stat-title">إجمالي الموردين</h6>
+                        <h3 class="stat-value">{{ total_suppliers }}</h3>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="stat-title">المستحقات</h6>
+                        <h3 class="stat-value">{{ total_debt|floatformat:2 }} <span class="currency-suffix">ريال</span></h3>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="stat-title">مطابقات الموردين المكتملة</h6>
+                        <h3 class="stat-value"><span class="percentage-value">{{ completion_rate|floatformat:0 }}%</span></h3>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">المنتجات الحديثة</h5>
+                <a href="{% url 'stitec:products' %}" class="card-link">عرض الكل</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>اسم الصنف</th>
+                            <th>الباركود</th>
+                            <th>الوحدة</th>
+                            <th>حجم العبوة</th>
+                            <th>اسم المرسل</th>
+                            <th>اسم المورد</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in recent_products %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="product-icon"><i class="bi bi-box"></i></div>
+                                    <div>{{ product.name }}</div>
+                                </div>
+                            </td>
+                            <td>{{ product.barcode }}</td>
+                            <td>{{ product.get_unit_display }}</td>
+                            <td>{{ product.package_size|default:"-" }}</td>
+                            <td>{{ product.sender_name }}</td>
+                            <td>{{ product.supplier.name }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">لا توجد منتجات حديثة</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">مطابقات الموردين الحديثة</h5>
+                <a href="{% url 'stitec:supplier_matching' %}" class="card-link">عرض الكل</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>المورد</th>
+                            <th>اسم الملف</th>
+                            <th>المديونية</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for matching in recent_matchings %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="supplier-icon"><i class="bi bi-building"></i></div>
+                                    <div>{{ matching.supplier.name }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                {{ matching.matching_file_name }}
+                                {% if matching.matching_file %}
+                                <a href="{{ matching.matching_file.url }}" class="ms-2">
+                                    <i class="bi bi-file-earmark-arrow-down text-info"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                            <td><strong>{{ matching.debt_amount|floatformat:2 }}</strong> <span class="currency-suffix">ريال</span></td>
+                            <td>
+                                {% if matching.status == 'complete' %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i> مكتمل</span>
+                                {% elif matching.status == 'partial' %}
+                                <span class="badge bg-warning"><i class="bi bi-exclamation-triangle-fill me-1"></i> جزئي</span>
+                                {% else %}
+                                <span class="badge bg-secondary"><i class="bi bi-clock-fill me-1"></i> معلق</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">لا توجد مطابقات حديثة</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

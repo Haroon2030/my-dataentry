@@ -1,0 +1,42 @@
+# ===== متطلبات أساسية =====
+Django==5.2
+asgiref==3.8.1
+sqlparse==0.5.3
+tzdata==2025.1
+
+# ===== قواعد البيانات =====
+mysqlclient==2.2.7               # دعم MySQL - المستخدم حاليا في المشروع
+# psycopg2-binary==2.9.10        # دعم PostgreSQL - متاح إذا تم تغيير قاعدة البيانات
+
+# ===== التعامل مع الملفات =====
+Pillow==10.2.0                   # للتعامل مع الصور
+reportlab==4.4.0                 # لإنشاء ملفات PDF
+openpyxl==3.1.5                  # قراءة وكتابة ملفات Excel
+XlsxWriter==3.2.3                # إنشاء ملفات Excel
+django-import-export==3.3.3       # استيراد وتصدير البيانات من/إلى Excel/CSV
+
+# ===== التخصيص والواجهة =====
+django-widget-tweaks==1.5.0       # تخصيص النماذج في القوالب
+django-jazzmin==3.0.1            # تحسين واجهة الإدارة
+django-bootstrap5==23.3          # دعم Bootstrap 5
+arabic-reshaper==3.0.0           # دعم إعادة تشكيل النص العربي
+python-bidi==0.6.6               # دعم النصوص ثنائية الاتجاه
+
+# ===== الأمان وإدارة المستخدمين =====
+django-two-factor-auth==1.15.5    # المصادقة الثنائية
+django-otp==1.3.0                # كلمات المرور لمرة واحدة
+
+# ===== أدوات التطوير والنشر =====
+gunicorn==23.0.0                 # خادم WSGI للإنتاج
+whitenoise==6.9.0                # لخدمة الملفات الثابتة في الإنتاج
+python-decouple==3.8             # فصل الإعدادات عن الشيفرة
+dj-database-url==2.3.0           # للتعامل مع عناوين URL لقواعد البيانات
+django-debug-toolbar==4.2.0      # شريط أدوات التصحيح
+django-extensions==4.1           # إضافات مفيدة لـ Django
+
+# ===== دعم API =====
+djangorestframework==3.14.0       # إنشاء واجهات برمجة التطبيقات REST
+django-cors-headers==4.3.1        # دعم CORS للواجهات البرمجية
+
+# ===== دعم Cache والأداء =====
+django-redis==5.4.0               # تخزين مؤقت باستخدام Redis

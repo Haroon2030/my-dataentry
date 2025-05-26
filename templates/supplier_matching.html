@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+
+{% block title %}مطابقة الموردين - نظام المحاسبة{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/supplier_matching_enhanced.css">
+{% endblock %}
+
+{% block page_title %}مطابقة الموردين{% endblock %}
+
+{% block content %}
+<!-- قسم العنوان الرئيسي -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2 class="section-title">مطابقة الموردين</h2>
+        <p class="section-description">مطابقة المنتجات مع الموردين المعنيين</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <div class="action-group">
+            <a href="#" class="btn btn-success" title="إضافة مطابقة جديدة">
+                <i class="bi bi-plus-circle me-2"></i> إضافة مطابقة
+            </a>
+            <div class="dropdown d-inline-block ms-2">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-download me-1"></i> تصدير
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="exportDropdown">
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-excel me-2"></i> Excel</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-pdf me-2"></i> PDF</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-printer me-2"></i> طباعة</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- قسم الإحصائيات -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="stat-card bg-primary text-white">
+            <div class="stat-card-body">
+                <div class="stat-card-icon">
+                    <i class="bi bi-buildings-fill"></i>
+                </div>
+                <div class="stat-card-content">
+                    <h5 class="stat-card-title">إجمالي المطابقات</h5>
+                    <h2 class="stat-card-value">{{ total_matchings|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card bg-success text-white">
+            <div class="stat-card-body">
+                <div class="stat-card-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div class="stat-card-content">
+                    <h5 class="stat-card-title">المطابقات المكتملة</h5>
+                    <h2 class="stat-card-value">{{ completed_matchings|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card bg-warning">
+            <div class="stat-card-body">
+                <div class="stat-card-icon">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <div class="stat-card-content">
+                    <h5 class="stat-card-title">مطابقات معلقة</h5>
+                    <h2 class="stat-card-value">{{ pending_matchings|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <!-- رأس البطاقة -->
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <h5 class="card-title fw-bold mb-3 mb-md-0">مطابقة الموردين ومتابعة المديونيات</h5>
+                    <div class="card-actions">
+                        <form action="{% url 'stitec:supplier_matching' %}" method="get" class="d-flex flex-wrap gap-2">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="البحث في المطابقات..." value="{{ search_query }}">
+                                <button class="btn btn-primary" type="submit" title="بحث">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                            <div class="dropdown d-inline-block">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-funnel me-1"></i> تصفية
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                                    <li><a class="dropdown-item" href="?status=complete">مكتمل</a></li>
+                                    <li><a class="dropdown-item" href="?status=partial">جزئي</a></li>
+                                    <li><a class="dropdown-item" href="?status=pending">معلق</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{% url 'stitec:supplier_matching' %}">إلغاء التصفية</a></li>
+                                </ul>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- محتوى البطاقة -->
+            <div class="card-body p-0">
+                <table class="table custom-table table-hover table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-nowrap" style="width: 18%">اسم المورد</th>
+                            <th class="text-nowrap" style="width: 15%">اسم الملف</th>
+                            <th class="text-nowrap" style="width: 15%">ملف المطابقة</th>
+                            <th class="text-nowrap" style="width: 15%">اسم المحاسب</th>
+                            <th class="text-nowrap" style="width: 10%">المديونية</th>
+                            <th class="text-nowrap" style="width: 10%">السداد</th>
+                            <th class="text-nowrap" style="width: 7%">الحالة</th>
+                            <th class="text-center" style="width: 10%">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for matching in matchings %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="supplier-icon me-2"><i class="bi bi-building"></i></div>
+                                    <div class="fw-medium">{{ matching.supplier.name }}</div>
+                                </div>
+                            </td>
+                            <td class="text-nowrap">{{ matching.matching_file_name }}</td>
+                            <td>
+                                {% if matching.matching_file %}
+                                <a href="{{ matching.matching_file.url }}" target="_blank" class="btn btn-sm btn-info">
+                                    <i class="bi bi-download me-1"></i> تحميل الملف
+                                </a>
+                                {% else %}
+                                <span class="text-muted"><i class="bi bi-slash-circle me-1"></i>لا يوجد ملف</span>
+                                {% endif %}
+                            </td>
+                            <td><i class="bi bi-person-circle me-1 text-muted"></i> {{ matching.accountant_name }}</td>
+                            <td class="text-danger fw-medium">{{ matching.debt_amount|floatformat:2 }} ريال</td>
+                            <td class="text-success fw-medium">{{ matching.payment_amount|floatformat:2 }} ريال</td>
+                            <td>
+                                {% if matching.status == 'complete' %}
+                                <span class="badge rounded-pill bg-success">
+                                    <i class="bi bi-check-circle-fill me-1"></i> مكتمل
+                                </span>
+                                {% elif matching.status == 'partial' %}
+                                <span class="badge rounded-pill bg-warning text-dark">
+                                    <i class="bi bi-dash-circle-fill me-1"></i> جزئي
+                                </span>
+                                {% else %}
+                                <span class="badge rounded-pill bg-secondary">
+                                    <i class="bi bi-hourglass-split me-1"></i> معلق
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="#" class="btn btn-sm btn-outline-primary" title="تعديل">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-outline-info" title="عرض التفاصيل">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4">
+                                <i class="bi bi-exclamation-circle text-muted fs-3 d-block mb-2"></i>
+                                <span class="text-muted">لا توجد مطابقات موردين</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- ترقيم الصفحات -->
+            {% if matchings.has_other_pages %}
+            <div class="card-footer">
+                <nav aria-label="صفحات مطابقة الموردين">
+                    <ul class="pagination justify-content-center mb-0">
+                        {% if matchings.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="الصفحة الأولى">
+                                <i class="bi bi-chevron-double-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ matchings.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="الصفحة السابقة">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <i class="bi bi-chevron-double-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for i in matchings.paginator.page_range %}
+                            {% if matchings.number == i %}
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="#">{{ i }}</a>
+                            </li>
+                            {% elif i > matchings.number|add:'-3' and i < matchings.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ i }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if matchings.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ matchings.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="الصفحة التالية">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ matchings.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="الصفحة الأخيرة">
+                                <i class="bi bi-chevron-double-left"></i>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <i class="bi bi-chevron-double-left"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% endif %}
+            <!-- نهاية البطاقة -->
+        </div>
+    </div>
+</div>
+{% endblock %}

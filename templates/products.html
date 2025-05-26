@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}إدارة المنتجات - نظام المحاسبة{% endblock %}
+
+{% block page_title %}إدارة المنتجات{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/products-enhanced.css">
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2 class="section-title">إدارة المنتجات</h2>
+        <p class="section-description">عرض وإدارة جميع المنتجات في نظام المخزون</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">قائمة المنتجات</h5>
+                    <div class="card-actions">
+                        <form action="{% url 'stitec:products' %}" method="get" class="d-flex">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="البحث في المنتجات..." value="{{ search_query }}">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <table class="table custom-table">
+                    <thead>
+                        <tr>
+                            <th>اسم الصنف</th>
+                            <th>الباركود</th>
+                            <th>الوحدة</th>
+                            <th>حجم العبوة</th>
+                            <th>اسم المرسل</th>
+                            <th>اسم المورد</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="product-icon"><i class="bi bi-box"></i></div>
+                                    <div>{{ product.name }}</div>
+                                </div>
+                            </td>
+                            <td>{{ product.barcode }}</td>
+                            <td>{{ product.unit.name }}</td>
+                            <td>{{ product.package_size|default:"-" }}</td>
+                            <td>{{ product.sender_name }}</td>
+                            <td>{{ product.supplier.name }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">لا توجد منتجات</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <nav>
+                    <ul class="pagination justify-content-end mb-0">
+                        <li class="page-item disabled"><a class="page-link" href="#">السابق</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">التالي</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

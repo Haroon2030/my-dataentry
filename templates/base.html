@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}لوحة تحكم المحاسبة{% endblock %}</title>
+    <!-- Bootstrap 5 CSS RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.rtl.min.css">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Google Fonts - Arabic -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3>نظام ERP</h3>
+                <div class="logo-separator"></div>
+            </div>
+            
+            <!-- Sidebar Navigation -->
+            <ul class="list-unstyled components">
+                <li class="{% if request.path == '/' %}active{% endif %}">
+                    <a href="{% url 'stitec:dashboard' %}">
+                        <i class="bi bi-grid-1x2-fill"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </li>
+                <li class="{% if 'products' in request.path %}active{% endif %}">
+                    <a href="{% url 'stitec:products' %}">
+                        <i class="bi bi-box-seam"></i>
+                        <span>المنتجات</span>
+                    </a>
+                </li>
+                <li class="{% if 'supplier-matching' in request.path %}active{% endif %}">
+                    <a href="{% url 'stitec:supplier_matching' %}">
+                        <i class="bi bi-diagram-3"></i>
+                        <span>مطابقة الموردين</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <a href="#">
+                    <i class="bi bi-gear-fill"></i>
+                    <span>الإعدادات</span>
+                </a>
+                <a href="{% url 'admin:index' %}">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    <span>لوحة الإدارة</span>
+                </a>
+                <a href="#">
+                    <i class="bi bi-question-circle-fill"></i>
+                    <span>المساعدة</span>
+                </a>
+            </div>
+        </nav>
+        
+        <!-- Content Area -->
+        <div id="content">
+            <!-- Top Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div class="container-fluid">
+                    <!-- Sidebar toggle button -->
+                    <button type="button" id="sidebarCollapse" class="btn">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    
+                    <div class="navbar-title">{% block page_title %}لوحة تحكم المحاسبة{% endblock %}</div>
+                    
+                    <div class="ms-auto d-flex">
+                        <div class="search-box me-3">
+                            <form action="{% url 'stitec:products' %}" method="get">
+                                <div class="input-group">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" name="search" class="form-control" placeholder="بحث في المنتجات...">
+                                    <button type="submit" class="d-none"></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Main Content -->
+            <div class="container-fluid main-content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar toggle functionality
+            document.getElementById('sidebarCollapse').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('content').classList.toggle('active');
+            });
+            
+            {% block extra_js %}{% endblock %}
+        });
+    </script>
+</body>
+</html>

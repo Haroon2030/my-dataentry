@@ -1,0 +1,140 @@
+/* 
+   Enhanced Products Page Styling for Arabic Accounting System
+*/
+
+/* Stat Cards Enhancement - No Percentages */
+.stat-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: none;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.stat-card .card-body {
+    padding: 24px;
+}
+
+.stat-title {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background-color: rgba(30, 136, 229, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+/* Hide percentage changes */
+.percentage-change,
+.stat-change {
+    display: none;
+}
+
+/* Tables Enhancement */
+.custom-table th {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 1px solid #eaeaea;
+    background-color: #f8f9fa;
+    padding: 14px 16px;
+}
+
+.custom-table td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f0f0f0;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+/* Badge Enhancements */
+.badge {
+    padding: 6px 10px;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 0.7rem;
+}
+
+.badge.bg-success {
+    background-color: rgba(39, 174, 96, 0.1) !important;
+    color: #27ae60;
+    border: 1px solid rgba(39, 174, 96, 0.2);
+}
+
+.badge.bg-secondary {
+    background-color: rgba(108, 117, 125, 0.1) !important;
+    color: #6c757d;
+    border: 1px solid rgba(108, 117, 125, 0.2);
+}
+
+/* Improved Product Icons */
+.product-icon {
+    width: 40px;
+    height: 40px;
+    margin-left: 12px;
+    background-color: rgba(30, 136, 229, 0.08);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.1rem;
+}
+
+/* Card Headers */
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 16px 20px;
+}
+
+.card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #212529;
+}
+
+/* تم إزالة أزرار الإجراءات */
+
+/* Pagination Styling */
+.pagination {
+    margin-bottom: 0;
+}
+
+.page-link {
+    color: var(--primary-color);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: transparent;
+}
